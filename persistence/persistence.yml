@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: persistence-cm
+  namespace: gluu
+data:
+  CN_CONFIG_ADAPTER: "kubernetes"
+  CN_SECRET_ADAPTER: "kubernetes"
+  CN_PERSISTENCE_TYPE: "ldap"
+  CN_LDAP_URL: "opendj:1636"
+  CN_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  CN_SECRET_KUBERNETES_SECRET: "gluu"
+  CN_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+  CN_CONFIG_KUBERNETES_CONFIGMAP: "gluu"
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: persistence-load
+  namespace: gluu
+spec:
+  template:
+    metadata:
+      labels:
+        app: persistence-load
+      namespace: gluu
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: persistence-load
+          image: docker.io/gluufederation/persistence:4.2.2_dev
+          envFrom:
+          - configMapRef:
+              name: persistence-cm
