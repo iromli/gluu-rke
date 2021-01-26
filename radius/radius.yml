@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: radius-cm
+  namespace: gluu
+data:
+  GLUU_CONFIG_ADAPTER: "kubernetes"
+  GLUU_SECRET_ADAPTER: "kubernetes"
+  DOMAIN: "demoexample.gluu.org"
+  GLUU_LDAP_URL: "opendj:1636"
+  GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_OXAUTH_BACKEND: "oxauth:8080"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: radius
+  labels:
+    app: radius
+  namespace: gluu
+spec:
+  ports:
+  - port: 8080
+    name: radius
+  selector:
+    app: radius
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radius
+  labels:
+    app: radius
+    APP_NAME: radius
+  namespace: gluu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radius
+  template:
+    metadata:
+      labels:
+        app: radius
+        APP_NAME: radius
+      namespace: gluu
+    spec:
+      containers:
+      - name: radius
+        # imagePullPolicy: Always
+        image: docker.io/gluufederation/radius:4.2.2_dev
+        resources:
+          requests:
+            memory: "1000Mi"
+          limits:
+            memory: "1536Mi"
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: radius-cm
+        # livenessProbe:
+        #   httpGet:
+        #     path: /radius/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        # readinessProbe:
+        #   httpGet:
+        #     path: /radius/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 25
+        #   periodSeconds: 25
+      hostAliases:
+      - ip: NGINX_IP
+        hostnames:
+        - demoexample.gluu.org
