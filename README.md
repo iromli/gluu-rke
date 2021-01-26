@@ -12,7 +12,7 @@
 
 ## Bootstrapping
 
-    export KUBECONFIG=kube_config_cluster.yml
+    export KUBECONFIG=$PWD/kube_config_cluster.yml
     kubectl apply -f bootstrap.yml
 
 ## Deploying Containers
@@ -23,28 +23,9 @@
 
         cd config
 
-1.  Create `generate.json` to define parameters for generating new config and secret:
-
-    Example:
-
-        {
-            "hostname": "demoexample.jans.io",
-            "country_code": "US",
-            "state": "TX",
-            "city": "Austin",
-            "admin_pw": "S3cr3t+pass",
-            "ldap_pw": "S3cr3t+pass",
-            "email": "s@jans.local",
-            "org_name": "Janssen Project"
-        }
-
-    Afterwards, save this file into ConfigMaps:
-
-        kubectl -n jans create cm config-generate-params --from-file=generate.json
-
 1.  Load config and secret:
 
-        kubectl apply -f config-load.yaml
+        kubectl apply -f config-load.yml
 
 ### WrenDS (LDAP)
 
@@ -54,7 +35,7 @@
 
 1.  Deploy OpenDJ pod that generates initial data:
 
-        kubectl apply -f opendj.yaml
+        kubectl apply -f opendj.yml
 
 ## Persistence Data
 
@@ -64,7 +45,7 @@
 
 1.  Deploy OpenDJ pod that generates initial data:
 
-        kubectl apply -f persistence.yaml
+        kubectl apply -f persistence.yml
 
     This will create job to inject data to LDAP.
 
@@ -80,7 +61,7 @@
 
 1.  Afterwards deploy the custom Ingress for Gluu Server routes.
 
-        kubectl apply -f nginx.yaml
+        kubectl apply -f nginx.yml
 
 ### oxAuth
 

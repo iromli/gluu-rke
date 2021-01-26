@@ -63,15 +63,6 @@ spec:
         envFrom:
         - configMapRef:
             name: oxauth-cm
-        # volumeMounts:
-        #   - mountPath: /opt/gluu/jetty/oxauth/logs
-        #     name: oxauth-logs
-        #   - mountPath: /opt/gluu/jetty/oxauth/lib/ext
-        #     name: oxauth-lib-ext
-        #   - mountPath: /opt/gluu/jetty/oxauth/custom/static
-        #     name: oxauth-custom-static
-        #   - mountPath: /opt/gluu/jetty/oxauth/custom/pages
-        #     name: oxauth-custom-pages
         livenessProbe:
           httpGet:
             path: /oxauth/.well-known/openid-configuration
@@ -88,16 +79,3 @@ spec:
       - ip: NGINX_IP
         hostnames:
         - demoexample.gluu.org
-      # volumes:
-      # - name: oxauth-logs
-      #   persistentVolumeClaim:
-      #     claimName: oxauth-logs-volume-claim
-      # - name: oxauth-lib-ext
-      #   persistentVolumeClaim:
-      #     claimName: oxauth-lib-ext-volume-claim
-      # - name: oxauth-custom-static
-      #   persistentVolumeClaim:
-      #     claimName: oxauth-custom-static-volume-claim
-      # - name: oxauth-custom-pages
-      #   persistentVolumeClaim:
-      #     claimName: oxauth-custom-pages-volume-claim

@@ -11,6 +11,26 @@ data:
 
 ---
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-generate-params
+  namespace: gluu
+data:
+  generate.json: |
+    {
+      "hostname": "demoexample.gluu.org",
+      "country_code": "US",
+      "state": "TX",
+      "city": "Austin",
+      "admin_pw": "S3cr3t+pass",
+      "ldap_pw": "S3cr3t+pass",
+      "email": "s@gluu.local",
+      "org_name": "Gluu"
+    }
+
+---
+
 apiVersion: batch/v1
 kind: Job
 metadata:

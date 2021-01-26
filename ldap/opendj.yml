@@ -5,13 +5,13 @@ metadata:
   name: opendj-cm
   namespace: gluu
 data:
-  CN_CONFIG_ADAPTER: "kubernetes"
-  CN_SECRET_ADAPTER: "kubernetes"
-  CN_CERT_ALT_NAME: "opendj"
-  CN_SECRET_KUBERNETES_NAMESPACE: "gluu"
-  CN_SECRET_KUBERNETES_SECRET: "gluu"
-  CN_CONFIG_KUBERNETES_NAMESPACE: "gluu"
-  CN_CONFIG_KUBERNETES_CONFIGMAP: "gluu"
+  GLUU_CONFIG_ADAPTER: "kubernetes"
+  GLUU_SECRET_ADAPTER: "kubernetes"
+  GLUU_CERT_ALT_NAME: "opendj"
+  GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_SECRET_KUBERNETES_SECRET: "gluu"
+  GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_CONFIG_KUBERNETES_CONFIGMAP: "gluu"
 
 ---
 
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - name: opendj
-        image: docker.io/gluufederation/opendj:4.2.2_advertise
+        image: docker.io/gluufederation/opendj:4.2.2_dev
         lifecycle:
           preStop:
             exec:
