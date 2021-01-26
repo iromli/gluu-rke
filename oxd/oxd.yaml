@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oxd-cm
+  namespace: gluu
+data:
+  GLUU_OXD_APPLICATION_CERT_CN: "oxd"
+  GLUU_OXD_ADMIN_CERT_CN: "oxd"
+  GLUU_CONFIG_ADAPTER: "kubernetes"
+  GLUU_SECRET_ADAPTER: "kubernetes"
+  GLUU_LDAP_URL: "opendj:1636"
+  DOMAIN: "demoexample.gluu.org"
+  GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: oxd
+  labels:
+    app: oxd
+  namespace: gluu
+spec:
+  ports:
+  - port: 8444
+    name: oxd-admin-gui
+  - port: 8443
+    name: oxd-app-connector
+  selector:
+    app: oxd
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oxd
+  labels:
+    app: oxd
+  namespace: gluu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oxd
+  template:
+    metadata:
+      labels:
+        app: oxd
+      namespace: gluu
+    spec:
+      containers:
+      - name: oxd
+        image: docker.io/gluufederation/oxd-server:4.2.2_dev
+        resources:
+          requests:
+            memory: "500Mi"
+          limits:
+            memory: "1536Mi"
+        ports:
+        - containerPort: 8443
+        - containerPort: 8444
+        envFrom:
+        - configMapRef:
+            name: oxd-cm
+      hostAliases:
+      - ip: NGINX_IP
+        hostnames:
+        - demoexample.gluu.org
