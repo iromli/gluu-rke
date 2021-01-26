@@ -10,6 +10,7 @@ data:
   GLUU_LDAP_URL: "opendj:1636"
   GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
   GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_OXAUTH_BACKEND: "oxauth:8080"
 
 ---
 
@@ -37,6 +38,7 @@ metadata:
     app: oxtrust
   namespace: gluu
 spec:
+  serviceName: oxtrust
   replicas: 1
   selector:
     matchLabels:
