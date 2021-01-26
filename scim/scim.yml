@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scim-cm
+  namespace: gluu
+data:
+  GLUU_CONFIG_ADAPTER: "kubernetes"
+  GLUU_SECRET_ADAPTER: "kubernetes"
+  DOMAIN: "demoexample.gluu.org"
+  GLUU_LDAP_URL: "opendj:1636"
+  GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: scim
+  labels:
+    app: scim
+  namespace: gluu
+spec:
+  ports:
+  - port: 8080
+    name: scim
+  selector:
+    app: scim
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scim
+  labels:
+    app: scim
+    APP_NAME: scim
+  namespace: gluu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scim
+  template:
+    metadata:
+      labels:
+        app: scim
+        APP_NAME: scim
+      namespace: gluu
+    spec:
+      containers:
+      - name: scim
+        # imagePullPolicy: Always
+        image: docker.io/gluufederation/scim:4.2.2_dev
+        resources:
+          requests:
+            memory: "1000Mi"
+          limits:
+            memory: "1536Mi"
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: scim-cm
+        # livenessProbe:
+        #   httpGet:
+        #     path: /scim/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        # readinessProbe:
+        #   httpGet:
+        #     path: /scim/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 25
+        #   periodSeconds: 25
+      hostAliases:
+      - ip: NGINX_IP
+        hostnames:
+        - demoexample.gluu.org
