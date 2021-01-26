@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oxpassport-cm
+  namespace: gluu
+data:
+  GLUU_CONFIG_ADAPTER: "kubernetes"
+  GLUU_SECRET_ADAPTER: "kubernetes"
+  DOMAIN: "demoexample.gluu.org"
+  GLUU_LDAP_URL: "opendj:1636"
+  GLUU_SECRET_KUBERNETES_NAMESPACE: "gluu"
+  GLUU_CONFIG_KUBERNETES_NAMESPACE: "gluu"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: oxpassport
+  labels:
+    app: oxpassport
+  namespace: gluu
+spec:
+  ports:
+  - port: 8090
+    name: oxpassport
+  selector:
+    app: oxpassport
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: oxpassport
+  labels:
+    app: oxpassport
+  namespace: gluu
+spec:
+  serviceName: oxpassport
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oxpassport
+  template:
+    metadata:
+      labels:
+        app: oxpassport
+      namespace: gluu
+    spec:
+      containers:
+      - name: oxpassport
+        # imagePullPolicy: Always
+        image: docker.io/gluufederation/oxpassport:4.2.2_dev
+        resources:
+          requests:
+            memory: "1000Mi"
+          limits:
+            memory: "1536Mi"
+        ports:
+        - containerPort: 8090
+        envFrom:
+        - configMapRef:
+            name: oxpassport-cm
+        # livenessProbe:
+        #   httpGet:
+        #     path: /oxpassport/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 30
+        # readinessProbe:
+        #   httpGet:
+        #     path: /oxpassport/.well-known/openid-configuration
+        #     port: 8080
+        #   initialDelaySeconds: 25
+        #   periodSeconds: 25
+      hostAliases:
+      - ip: NGINX_IP
+        hostnames:
+        - demoexample.gluu.org
