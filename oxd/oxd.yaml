@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
       - name: oxd
-        image: docker.io/gluufederation/oxd-server:4.2.2_dev
+        image: docker.io/gluufederation/oxd-server:4.3.0_dev
         resources:
           requests:
             memory: "500Mi"

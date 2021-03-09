@@ -30,7 +30,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: persistence-load
-          image: docker.io/gluufederation/persistence:4.2.2_dev
+          image: docker.io/gluufederation/persistence:4.3.0_dev
           envFrom:
           - configMapRef:
               name: persistence-cm

@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - name: opendj
-        image: docker.io/gluufederation/opendj:4.2.2_dev
+        image: docker.io/gluufederation/opendj:4.3.0_dev
         lifecycle:
           preStop:
             exec:

@@ -50,7 +50,7 @@ spec:
             name: config-generate-params
       containers:
         - name: config-load
-          image: docker.io/gluufederation/config-init:4.2.2_dev
+          image: docker.io/gluufederation/config-init:4.3.0_dev
           volumeMounts:
             - mountPath: /app/db/generate.json
               name: config-generate-params

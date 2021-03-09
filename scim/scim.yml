@@ -52,7 +52,7 @@ spec:
       containers:
       - name: scim
         # imagePullPolicy: Always
-        image: docker.io/gluufederation/scim:4.2.2_dev
+        image: docker.io/gluufederation/scim:4.3.0_dev
         resources:
           requests:
             memory: "1000Mi"

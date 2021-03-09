@@ -53,7 +53,7 @@ spec:
       containers:
       - name: radius
         # imagePullPolicy: Always
-        image: docker.io/gluufederation/radius:4.2.2_dev
+        image: docker.io/gluufederation/radius:4.3.0_dev
         resources:
           requests:
             memory: "1000Mi"
